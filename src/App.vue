@@ -1,6 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue';
 
+const hasEditing = ref(false);
 const newTask = ref("");
 const todos = ref([
   {task: 'study javascript', status: true},
@@ -25,10 +26,12 @@ function deleteTask(item)
 
 function editTask(item)
 {
+  hasEditing.value = !hasEditing.value;
+
   const word = newTask.value;
 
   if(!!word)
-    todos.value.splice(item.index, 1, { task: word, status: item.status})
+    todos.value.splice(item.index, 1, { task: word.toLowerCase(), status: item.status})
     newTask.value = ""
 }
 </script>
@@ -38,8 +41,8 @@ function editTask(item)
     <h1>Welcome to your todoZ</h1>
 
     <section class="add-task">
-      <input v-model="newTask" type="text" name="" id="">
-      <button @click="addTask">Add task</button>
+      <input v-model="newTask" :placeholder="hasEditing ? 'Edite sua tarefa' : 'Adicione uma tarefa'" type="text">
+      <button v-show="!hasEditing" @click="addTask">Add task</button>
     </section>
 
     <ul class="main-list">
@@ -92,5 +95,24 @@ function editTask(item)
   cursor: pointer;
   border: none;
   margin: 0 0.5rem;
+  }
+
+  .add-task input
+  {
+    font-size: 1.2rem;
+    margin: 2rem 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    outline: none;
+  }
+
+  .add-task button
+  {
+    font-size: 1.2rem;
+    background-color: rgb(75, 121, 219);
+    margin: 2rem 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    outline: none;
   }
 </style>
