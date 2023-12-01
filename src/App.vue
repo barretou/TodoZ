@@ -14,13 +14,22 @@ const taskDoneStyle = computed(() => {
 
 function addTask() {
   if (Boolean(newTask.value))
-    todos.value.push({ task: newTask.value, status: false})
+    todos.value.push({ task: newTask.value.toLowerCase(), status: false})
     newTask.value = ""
 }
 
 function deleteTask(item)
 {
   todos.value =  todos.value.filter((t) => t !== item)
+}
+
+function editTask(item)
+{
+  const word = newTask.value;
+
+  if(!!word)
+    todos.value.splice(item.index, 1, { task: word, status: item.status})
+    newTask.value = ""
 }
 </script>
 
@@ -37,8 +46,8 @@ function deleteTask(item)
       <li v-for="(item, index) in todos" :class="taskDoneStyle[index]">
         <input type="checkbox" v-model="item.status">
         {{  item.task }}
-        <button @click="editTask(item)" class="delete-button">&#128393;</button>
-        <button @click="deleteTask(item)" class="delete-button">&#10007;</button>
+        <button @click="editTask(item)" class="actions-button">&#128393;</button>
+        <button @click="deleteTask(item)" class="actions-button">&#10007;</button>
       </li>
     </ul>
   </section>
@@ -55,6 +64,7 @@ function deleteTask(item)
 .main-list
 {
   border: solid 1px rgb(75, 121, 219);
+  list-style: none;
   width: 500px;
   border-radius: 5px;
   padding: 2rem;
@@ -74,7 +84,7 @@ function deleteTask(item)
   color: rgb(75, 121, 219);
 }
 
-.delete-button
+.actions-button
 {
   background-color: rgb(75, 121, 219);
   color: white;
